@@ -57,7 +57,7 @@ public class Main {
             case 6: collezione.statistiche(); break;
             case 7: aggiungiGioco(collezione, scanner); break;
             case 8: mostraListaGiochi(collezione); break;
-            case 0: System.out.println("Uscita dal programma."); break;
+            case 0: System.out.println("Grazie per aver usato il nostro Catalogo Giochi. A presto."); break;
             default: System.out.println("Scelta non valida. Riprova.");
         }
     }

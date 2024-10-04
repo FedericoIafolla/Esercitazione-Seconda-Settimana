@@ -49,9 +49,9 @@ public class Main {
 
     private static void gestisciScelta(Collezione collezione, Scanner scanner, int scelta) {
         switch (scelta) {
-            case 1: cercaGioco(collezione, scanner, "Inserisci ID gioco: ", true); break;
-            case 2: cercaGioco(collezione, scanner, "Inserisci prezzo: ", false); break;
-            case 3: cercaGiocoDaTavolo(collezione, scanner); break;
+            case 1: cercaGiocoPerID(collezione, scanner); break;
+            case 2: cercaGiochiPerPrezzo(collezione, scanner); break;
+            case 3: cercaGiochiDaTavoloPerGiocatori(collezione, scanner); break;
             case 4: modificaGioco(collezione, scanner, "rimuovi"); break;
             case 5: modificaGioco(collezione, scanner, "aggiorna"); break;
             case 6: collezione.statistiche(); break;
@@ -62,25 +62,27 @@ public class Main {
         }
     }
 
-    private static void cercaGioco(Collezione collezione, Scanner scanner, String messaggio, boolean cercaPerID) {
-        eseguiOperazione(scanner, messaggio, argomento -> {
-            if (cercaPerID) {
-                collezione.cercaPerID(argomento).ifPresentOrElse(
-                        gioco -> System.out.println("Gioco trovato: " + gioco.getTitolo()),
-                        () -> System.out.println("Nessun gioco trovato con ID: " + argomento)
-                );
-            } else {
-                double prezzo = Double.parseDouble(argomento);
-                System.out.println("Giochi con prezzo inferiore a " + prezzo + ":");
-                collezione.cercaPerPrezzo(prezzo).forEach(gioco ->
-                        System.out.println("- " + gioco.getTitolo() + " - Prezzo: " + gioco.getPrezzo())
-                );
-            }
+    private static void cercaGiocoPerID(Collezione collezione, Scanner scanner) {
+        eseguiOperazione(scanner, "Inserisci ID gioco (premi 'Esc' per tornare indietro): ", idCerca -> {
+            collezione.cercaPerID(idCerca).ifPresentOrElse(
+                    gioco -> System.out.println("Gioco trovato: " + gioco.getTitolo()),
+                    () -> System.out.println("Nessun gioco trovato con ID: " + idCerca)
+            );
         });
     }
 
-    private static void cercaGiocoDaTavolo(Collezione collezione, Scanner scanner) {
-        eseguiOperazione(scanner, "Inserisci numero di giocatori: ", numGiocatoriStr -> {
+    private static void cercaGiochiPerPrezzo(Collezione collezione, Scanner scanner) {
+        eseguiOperazione(scanner, "Inserisci prezzo (premi 'Esc' per tornare indietro): ", prezzoStr -> {
+            double prezzo = Double.parseDouble(prezzoStr);
+            System.out.println("Giochi con prezzo inferiore a " + prezzo + ":");
+            collezione.cercaPerPrezzo(prezzo).forEach(gioco ->
+                    System.out.println("- " + gioco.getTitolo() + " - Prezzo: " + gioco.getPrezzo())
+            );
+        });
+    }
+
+    private static void cercaGiochiDaTavoloPerGiocatori(Collezione collezione, Scanner scanner) {
+        eseguiOperazione(scanner, "Inserisci numero di giocatori (premi 'Esc' per tornare indietro): ", numGiocatoriStr -> {
             int numGiocatori = Integer.parseInt(numGiocatoriStr);
             System.out.println("Giochi da tavolo per " + numGiocatori + " giocatori:");
             collezione.cercaPerNumeroGiocatori(numGiocatori).forEach(gioco ->
@@ -90,7 +92,7 @@ public class Main {
     }
 
     private static void modificaGioco(Collezione collezione, Scanner scanner, String azione) {
-        eseguiOperazione(scanner, "Inserisci ID gioco da " + (azione.equals("rimuovi") ? "rimuovere" : "aggiornare") + ": ", idGioco -> {
+        eseguiOperazione(scanner, "Inserisci ID gioco da " + (azione.equals("rimuovi") ? "rimuovere" : "aggiornare") + " (premi 'Esc' per tornare indietro): ", idGioco -> {
             if (azione.equals("rimuovi")) {
                 if (collezione.cercaPerID(idGioco).isPresent()) {
                     collezione.rimuoviGioco(idGioco);
@@ -108,9 +110,10 @@ public class Main {
         try {
             System.out.print(messaggio);
             String input = scanner.next();
-            if (!input.equalsIgnoreCase("esc")) {
-                operazione.esegui(input);
+            if (input.equalsIgnoreCase("esc")) {
+                return;
             }
+            operazione.esegui(input);
         } catch (Exception e) {
             System.out.println("Si è verificato un errore: " + e.getMessage());
         }
@@ -123,10 +126,13 @@ public class Main {
         }
 
         String titoloNuovo = leggiDati(scanner, "Inserisci nuovo titolo: ");
+        scanner.nextLine();
         int annoNuovo = leggiDatiInt(scanner, "Inserisci nuovo anno di pubblicazione: ");
+        scanner.nextLine();
         double prezzoNuovo = leggiDatiDouble(scanner, "Inserisci nuovo prezzo: ");
-
+        scanner.nextLine();
         Gioco giocoEsistente = collezione.cercaPerID(idAggiorna).get();
+
         if (giocoEsistente instanceof GiocoDaTavolo) {
             int numeroGiocatoriNuovo = leggiDatiInt(scanner, "Inserisci numero di giocatori: ");
             int durataMediaNuova = leggiDatiInt(scanner, "Inserisci durata media di una partita: ");
@@ -145,7 +151,21 @@ public class Main {
     }
 
     private static void aggiungiGioco(Collezione collezione, Scanner scanner) {
-        char tipoGioco = leggiTipoGioco(scanner);
+        boolean inputValido = false;
+        char tipoGioco = ' ';
+
+        while (!inputValido) {
+            System.out.print("Vuoi aggiungere un videogioco (v) o un gioco da tavolo (t)? ");
+            tipoGioco = scanner.next().toLowerCase().charAt(0);
+            scanner.nextLine();
+
+            if (tipoGioco == 'v' || tipoGioco == 't') {
+                inputValido = true;
+            } else {
+                System.out.println("Input non valido. Devi digitare 'v' per videogioco o 't' per gioco da tavolo.");
+            }
+        }
+
         String idGioco = leggiDati(scanner, "Inserisci ID gioco: ");
         String titoloGioco = leggiDati(scanner, "Inserisci titolo: ");
         int annoGioco = leggiDatiInt(scanner, "Inserisci anno di pubblicazione: ");
@@ -153,25 +173,12 @@ public class Main {
 
         if (tipoGioco == 'v') {
             aggiungiVideogioco(collezione, scanner, idGioco, titoloGioco, annoGioco, prezzoGioco);
-        } else {
+        } else if (tipoGioco == 't') {
             int numeroGiocatori = leggiDatiInt(scanner, "Inserisci numero di giocatori (da 2 a 10): ");
             int durataPartita = leggiDatiInt(scanner, "Inserisci durata media di una partita (in minuti): ");
             GiocoDaTavolo nuovoGiocoDaTavolo = new GiocoDaTavolo(idGioco, titoloGioco, annoGioco, prezzoGioco, numeroGiocatori, durataPartita);
             collezione.aggiungiGioco(nuovoGiocoDaTavolo);
             System.out.println("Gioco da tavolo aggiunto con successo.");
-        }
-    }
-
-    private static char leggiTipoGioco(Scanner scanner) {
-        while (true) {
-            System.out.print("Vuoi aggiungere un videogioco (v) o un gioco da tavolo (t)? ");
-            char tipoGioco = scanner.next().toLowerCase().charAt(0);
-            scanner.nextLine();
-            if (tipoGioco == 'v' || tipoGioco == 't') {
-                return tipoGioco;
-            } else {
-                System.out.println("Input non valido. Devi digitare 'v' per videogioco o 't' per gioco da tavolo.");
-            }
         }
     }
 
@@ -204,4 +211,5 @@ public class Main {
         System.out.println("Lista di giochi nella collezione:");
         collezione.mostraGiochi();
     }
+
 }

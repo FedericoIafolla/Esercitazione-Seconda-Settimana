@@ -1,7 +1,6 @@
 package com.giochi;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,8 +33,38 @@ public class Collezione {
         return giochi.stream().filter(g -> g.getIdGioco().equals(id)).findFirst();
     }
 
-    public List<Gioco> cercaPerPrezzo(double prezzo) {
-        return giochi.stream().filter(g -> g.getPrezzo() < prezzo).collect(Collectors.toList());
+    public void cercaPerPrezzo(double prezzo) {
+        List<GiocoDaTavolo> giochiDaTavolo = giochi.stream()
+                .filter(g -> g instanceof GiocoDaTavolo && g.getPrezzo() < prezzo)
+                .map(g -> (GiocoDaTavolo) g)
+                .collect(Collectors.toList());
+
+        List<Videogioco> videogiochi = giochi.stream()
+                .filter(g -> g instanceof Videogioco && g.getPrezzo() < prezzo)
+                .map(g -> (Videogioco) g)
+                .collect(Collectors.toList());
+
+        System.out.println("Giochi da tavolo sotto " + prezzo + "€:");
+        if (giochiDaTavolo.isEmpty()) {
+            System.out.println("Nessun gioco da tavolo trovato.");
+        } else {
+            giochiDaTavolo.forEach(gioco ->
+                    System.out.printf("ID: %s, Titolo: %s, Prezzo: %.2f€, Giocatori: %d, Durata Media: %d minuti\n",
+                            gioco.getIdGioco(), gioco.getTitolo(), gioco.getPrezzo(),
+                            gioco.getNumeroGiocatori(), gioco.getDurataMedia())
+            );
+        }
+
+        System.out.println("\nVideogiochi sotto " + prezzo + "€:");
+        if (videogiochi.isEmpty()) {
+            System.out.println("Nessun videogioco trovato.");
+        } else {
+            videogiochi.forEach(gioco ->
+                    System.out.printf("ID: %s, Titolo: %s, Prezzo: %.2f€, Piattaforma: %s, Durata: %d ore, Genere: %s\n",
+                            gioco.getIdGioco(), gioco.getTitolo(), gioco.getPrezzo(),
+                            gioco.getPiattaforma(), gioco.getDurataGioco(), gioco.getGenere())
+            );
+        }
     }
 
     public List<Gioco> cercaPerNumeroGiocatori(int numGiocatori) {
@@ -132,7 +161,7 @@ public class Collezione {
                 .collect(Collectors.toList());
 
         if (!videogiochi.isEmpty()) {
-            System.out.println("\nVideogiocchi:");
+            System.out.println("\nVideogiochi:");
             videogiochi.forEach(gioco ->
                     System.out.printf("ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f€, Piattaforma: %s, Durata: %d ore, Genere: %s\n",
                             gioco.getIdGioco(), gioco.getTitolo(), gioco.getAnnoPubblicazione(), gioco.getPrezzo(),
