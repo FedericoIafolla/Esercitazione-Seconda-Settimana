@@ -3,7 +3,6 @@ package com.giochi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class Collezione {
@@ -18,7 +17,7 @@ public class Collezione {
         aggiungiGioco(new GiocoDaTavolo("T005", "Cluedo", 1949, 29.99, 2, 60));
         aggiungiGioco(new Videogioco("V001", "Sekiro: Shadows Die Twice", 2019, 59.99, "PS4", 30, Genere.AZIONE));
         aggiungiGioco(new Videogioco("V002", "Alan Wake 2", 2023, 59.99, "PS5", 15, Genere.HORROR));
-        aggiungiGioco(new Videogioco("V003", "Wuthering Waves", 2024, 59.99, "PC", 20, Genere.AVVENTURA));
+        aggiungiGioco(new Videogioco("V003", "Wuthering Waves", 2024, 59.99, "PC", 600, Genere.AVVENTURA));
         aggiungiGioco(new Videogioco("V004", "Halo: The Master Chief Collection", 2014, 39.99, "Xbox One", 60, Genere.FPS));
         aggiungiGioco(new Videogioco("V005", "Gears of War", 2006, 29.99, "Xbox 360", 10, Genere.TPS));
     }
@@ -40,8 +39,7 @@ public class Collezione {
 
     public List<Gioco> cercaPerNumeroGiocatori(int numGiocatori) {
         return giochi.stream()
-                .filter(g -> g instanceof GiocoDaTavolo)
-                .filter(g -> ((GiocoDaTavolo) g).getNumeroGiocatori() == numGiocatori)
+                .filter(g -> g instanceof GiocoDaTavolo && ((GiocoDaTavolo) g).getNumeroGiocatori() == numGiocatori)
                 .collect(Collectors.toList());
     }
 
@@ -84,5 +82,42 @@ public class Collezione {
 
     public List<Gioco> getGiochi() {
         return giochi;
+    }
+
+    public void mostraGiochi() {
+        if (giochi.isEmpty()) {
+            System.out.println("Nessun gioco nella collezione.");
+            return;
+        }
+
+        System.out.println("Lista dei giochi nella collezione:");
+
+        List<GiocoDaTavolo> giochiDaTavolo = giochi.stream()
+                .filter(g -> g instanceof GiocoDaTavolo)
+                .map(g -> (GiocoDaTavolo) g)
+                .collect(Collectors.toList());
+
+        if (!giochiDaTavolo.isEmpty()) {
+            System.out.println("Giochi da tavolo:");
+            giochiDaTavolo.forEach(gioco ->
+                    System.out.printf("ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f€, Giocatori: %d, Durata Media: %d minuti\n",
+                            gioco.getIdGioco(), gioco.getTitolo(), gioco.getAnnoPubblicazione(), gioco.getPrezzo(),
+                            gioco.getNumeroGiocatori(), gioco.getDurataMedia())
+            );
+        }
+
+        List<Videogioco> videogiochi = giochi.stream()
+                .filter(g -> g instanceof Videogioco)
+                .map(g -> (Videogioco) g)
+                .collect(Collectors.toList());
+
+        if (!videogiochi.isEmpty()) {
+            System.out.println("\nVideogiocchi:");
+            videogiochi.forEach(gioco ->
+                    System.out.printf("ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f€, Piattaforma: %s, Durata: %d ore, Genere: %s\n",
+                            gioco.getIdGioco(), gioco.getTitolo(), gioco.getAnnoPubblicazione(), gioco.getPrezzo(),
+                            gioco.getPiattaforma(), gioco.getDurataGioco(), gioco.getGenere())
+            );
+        }
     }
 }

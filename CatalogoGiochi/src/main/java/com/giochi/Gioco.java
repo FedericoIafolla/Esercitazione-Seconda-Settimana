@@ -28,4 +28,9 @@ public abstract class Gioco {
     public double getPrezzo() {
         return prezzo;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + idGioco + ", Titolo: " + titolo + ", Anno di Pubblicazione: " + annoPubblicazione + ", Prezzo: " + prezzo;
+    }
 }

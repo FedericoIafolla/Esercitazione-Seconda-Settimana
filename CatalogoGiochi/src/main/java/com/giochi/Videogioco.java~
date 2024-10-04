@@ -26,7 +26,6 @@ public class Videogioco extends Gioco {
 
     @Override
     public String toString() {
-        return String.format("Videogioco [ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f, Piattaforma: %s, Durata: %d ore, Genere: %s]",
-                getIdGioco(), getTitolo(), getAnnoPubblicazione(), getPrezzo(), piattaforma, durataGioco, genere);
+        return super.toString() + ", Tipo: Videogioco, Piattaforma: " + piattaforma + ", Durata: " + durataGioco + " ore, Genere: " + genere;
     }
 }

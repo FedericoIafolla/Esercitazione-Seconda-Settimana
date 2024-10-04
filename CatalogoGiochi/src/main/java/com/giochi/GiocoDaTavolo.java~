@@ -4,11 +4,8 @@ public class GiocoDaTavolo extends Gioco {
     private int numeroGiocatori;
     private int durataMedia;
 
-    public GiocoDaTavolo(String id, String titolo, int annoPubblicazione, double prezzo, int numeroGiocatori, int durataMedia) {
-        super(id, titolo, annoPubblicazione, prezzo);
-        if (numeroGiocatori < 2 || numeroGiocatori > 10) {
-            throw new IllegalArgumentException("Numero di giocatori deve essere tra 2 e 10");
-        }
+    public GiocoDaTavolo(String idGioco, String titolo, int annoPubblicazione, double prezzo, int numeroGiocatori, int durataMedia) {
+        super(idGioco, titolo, annoPubblicazione, prezzo);
         this.numeroGiocatori = numeroGiocatori;
         this.durataMedia = durataMedia;
     }
@@ -21,5 +18,8 @@ public class GiocoDaTavolo extends Gioco {
         return durataMedia;
     }
 
-    // Setters for number of players and average duration can be added as needed
+    @Override
+    public String toString() {
+        return super.toString() + ", Tipo: Gioco da Tavolo, Numero di Giocatori: " + numeroGiocatori + ", Durata Media: " + durataMedia + " min";
+    }
 }

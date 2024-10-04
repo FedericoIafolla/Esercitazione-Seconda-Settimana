@@ -17,4 +17,10 @@ public class GiocoDaTavolo extends Gioco {
     public int getDurataMedia() {
         return durataMedia;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Gioco da Tavolo [ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f, Giocatori: %d, Durata Media: %d min]",
+                getIdGioco(), getTitolo(), getAnnoPubblicazione(), getPrezzo(), numeroGiocatori, durataMedia);
+    }
 }
