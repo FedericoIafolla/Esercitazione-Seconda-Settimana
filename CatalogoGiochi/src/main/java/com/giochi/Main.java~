@@ -141,7 +141,7 @@ public class Main {
         } else {
             String piattaforma = leggiDati(scanner, "Inserisci piattaforma: ");
             int durataGioco = leggiDatiInt(scanner, "Inserisci durata del gioco (in ore): ");
-            int genereIndex = leggiDatiInt(scanner, "Inserisci genere (0. AZIONE 1. AVVENTURA 2. HORROR 3. FPS 4. TPS): ");
+            int genereIndex = leggiDatiInt(scanner, "Inserisci genere (0-4): ");
             Genere genere = Genere.values()[genereIndex];
             Videogioco nuovoVideogioco = new Videogioco(idAggiorna, titoloNuovo, annoNuovo, prezzoNuovo, piattaforma, durataGioco, genere);
             collezione.aggiornaGioco(idAggiorna, nuovoVideogioco);

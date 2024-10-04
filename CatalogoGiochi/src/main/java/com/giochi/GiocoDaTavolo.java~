@@ -1,8 +1,8 @@
 package com.giochi;
 
 public class GiocoDaTavolo extends Gioco {
-    private int numeroGiocatori;
-    private int durataMedia;
+    private int numeroGiocatori; // Numero di giocatori
+    private int durataMedia; // Durata media del gioco in minuti
 
     public GiocoDaTavolo(String idGioco, String titolo, int annoPubblicazione, double prezzo, int numeroGiocatori, int durataMedia) {
         super(idGioco, titolo, annoPubblicazione, prezzo);
@@ -20,6 +20,7 @@ public class GiocoDaTavolo extends Gioco {
 
     @Override
     public String toString() {
-        return super.toString() + ", Tipo: Gioco da Tavolo, Numero di Giocatori: " + numeroGiocatori + ", Durata Media: " + durataMedia + " min";
+        return String.format("Gioco da Tavolo [ID: %s, Titolo: %s, Anno: %d, Prezzo: %.2f, Giocatori: %d, Durata Media: %d min]",
+                getID(), getTitolo(), getAnnoPubblicazione(), getPrezzo(), numeroGiocatori, durataMedia);
     }
 }
