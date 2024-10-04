@@ -1,7 +1,6 @@
 package com.giochi;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,22 +63,13 @@ public class Collezione {
         int countVideogiochi = 0;
         int countGiochiDaTavolo = 0;
 
-        GiocoDaTavolo giocoDaTavoloPiùCostoso = null;
-        Videogioco videogiocoPiùCostoso = null;
-
         for (Gioco gioco : giochi) {
             if (gioco instanceof Videogioco) {
                 sommaPrezziVideogiochi += gioco.getPrezzo();
                 countVideogiochi++;
-                if (videogiocoPiùCostoso == null || gioco.getPrezzo() > videogiocoPiùCostoso.getPrezzo()) {
-                    videogiocoPiùCostoso = (Videogioco) gioco;
-                }
             } else if (gioco instanceof GiocoDaTavolo) {
                 sommaPrezziGiochiDaTavolo += gioco.getPrezzo();
                 countGiochiDaTavolo++;
-                if (giocoDaTavoloPiùCostoso == null || gioco.getPrezzo() > giocoDaTavoloPiùCostoso.getPrezzo()) {
-                    giocoDaTavoloPiùCostoso = (GiocoDaTavolo) gioco;
-                }
             }
         }
 
@@ -88,16 +78,6 @@ public class Collezione {
 
         System.out.println("Media dei prezzi dei videogiochi: " + mediaVideogiochi);
         System.out.println("Media dei prezzi dei giochi da tavolo: " + mediaGiochiDaTavolo);
-        System.out.println("Numero totale di videogiochi: " + countVideogiochi);
-        System.out.println("Numero totale di giochi da tavolo: " + countGiochiDaTavolo);
-
-        if (videogiocoPiùCostoso != null) {
-            System.out.println("Videogioco più costoso: " + videogiocoPiùCostoso.getTitolo() + " - Prezzo: " + videogiocoPiùCostoso.getPrezzo() + "€");
-        }
-
-        if (giocoDaTavoloPiùCostoso != null) {
-            System.out.println("Gioco da tavolo più costoso: " + giocoDaTavoloPiùCostoso.getTitolo() + " - Prezzo: " + giocoDaTavoloPiùCostoso.getPrezzo() + "€");
-        }
     }
 
     public List<Gioco> getGiochi() {
